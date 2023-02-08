@@ -10,12 +10,17 @@
 
 This file documents the HashiCorp Sentinel policies that apply to this module
 
-## Policy 1
+## AKS Policy
+Description: The configured "virtual_machine_size" should be an Intel Xeon 3rd Generation(code-named Ice Lake) Scalable processors
 
-Description: **Add the description of the policy. This will be removed !**
+Resource type: 
 
-Resource type:  **Add the resource type of the policy. This will be removed !**
+Parameter: vm_size
 
-Parameter:  **Add the Parameter. This will be removed !**
+Allowed Types
 
-Allowed Types :  **Add allowed resource types of the policy. This will be removed !**
+- **Storage Optimized:** 
+- **General Purpose:** 
+- **Memory Optimized:** 
+
+Links
