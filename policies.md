@@ -11,11 +11,11 @@
 This file documents the HashiCorp Sentinel policies that apply to this module
 
 ## EKS Policy
-Description: The configured "virtual_machine_size" should be an Intel Xeon 3rd Generation(code-named Ice Lake) Scalable processors
+Description: The configured "instance_type" should be an Intel Xeon 3rd Generation(code-named Ice Lake) Scalable processors
 
-Resource type: 
+Resource type: self_managed_node_group
 
-Parameter: vm_size
+Parameter: instance_type
 
 Allowed Types
 
