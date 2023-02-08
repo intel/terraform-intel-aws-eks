@@ -10,7 +10,7 @@
 
 This file documents the HashiCorp Sentinel policies that apply to this module
 
-## AKS Policy
+## EKS Policy
 Description: The configured "virtual_machine_size" should be an Intel Xeon 3rd Generation(code-named Ice Lake) Scalable processors
 
 Resource type: 
