@@ -19,9 +19,10 @@ Parameter: vm_size
 
 Allowed Types
 
+- **General Purpose:** m6i.large, m6i.xlarge, m6i.2xlarge, m6i.4xlarge, m6i.8xlarge, m6i.12xlarge, m6i.16xlarge, m6i.24xlarge, m6i.32xlarge, m6i.metal, m6in.large, m6in.xlarge, m6in.2xlarge, m6in.4xlarge, m6in.8xlarge, m6in.12xlarge, m6in.16xlarge, m6in.24xlarge, m6in.32xlarge, 	m5.large, m5.xlarge, m5.2xlarge, m5.4xlarge, m5.8xlarge, m5.12xlarge, m5.16xlarge, m5.24xlarge, m5.metal
 - **Storage Optimized:** 
 - **General Purpose:** 
 - **Memory Optimized:** 
 
 Links
-https://aws.amazon.com/free/?trk=b53e5260-30f6-45cf-9610-30be63969231&sc_channel=ps&s_kwcid=AL!4422!3!610000101483!e!!g!!aws%20virtual%20machine&ef_id=CjwKCAiArY2fBhB9EiwAWqHK6tqwodSVds1KENBV8dbd728PoF4lZJuXZ8XuVpVUkOkrzbPO3NjGexoCph8QAvD_BwE:G:s&s_kwcid=AL!4422!3!610000101483!e!!g!!aws%20virtual%20machine&all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all
+https://docs.aws.amazon.com/eks/latest/userguide/choosing-instance-type.html
