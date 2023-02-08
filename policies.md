@@ -24,3 +24,4 @@ Allowed Types
 - **Memory Optimized:** 
 
 Links
+https://aws.amazon.com/free/?trk=b53e5260-30f6-45cf-9610-30be63969231&sc_channel=ps&s_kwcid=AL!4422!3!610000101483!e!!g!!aws%20virtual%20machine&ef_id=CjwKCAiArY2fBhB9EiwAWqHK6tqwodSVds1KENBV8dbd728PoF4lZJuXZ8XuVpVUkOkrzbPO3NjGexoCph8QAvD_BwE:G:s&s_kwcid=AL!4422!3!610000101483!e!!g!!aws%20virtual%20machine&all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all
