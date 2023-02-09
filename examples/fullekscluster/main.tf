@@ -16,7 +16,7 @@ module "eks_example_complete" {
 
   worker_groups_launch_template = [
     {
-      instance_type = "m6i.large"
+      instance_type = var.instance_type
       asg_desired_capacity = 2
     }
   ]
