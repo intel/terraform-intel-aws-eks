@@ -2,8 +2,9 @@ provider "aws" {
   region = "us-west-2"
 }
 
-module "eks" {
-  source = "terraform-aws-modules/eks/aws"
+module "eks_example_complete" {
+  source  = "terraform-aws-modules/eks/aws//examples/complete"
+  version = "19.7.0"
 
   cluster_name = "my-eks-cluster"
   subnets = ["subnet-049df61146f12", "subnet-049df61146f13", "subnet-049df61146f14"]
@@ -19,7 +20,7 @@ module "eks" {
 
   worker_groups_launch_template = [
     {
-      instance_type = "m6i.large"
+      instance_type = var.instance_type
       asg_desired_capacity = 2
     }
   ]
