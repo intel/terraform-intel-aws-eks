@@ -6,8 +6,6 @@ module "eks_example_complete" {
   source = "terraform-aws-modules/eks/examples/complete"
 
   cluster_name = "my-eks-cluster"
-  subnets = ["subnet-049df61146f12", "subnet-049df61146f13", "subnet-049df61146f14"]
-  vpc_id = "vpc-049df61146f12"
 
   tags = {
     Terraform = "True"
@@ -16,8 +14,10 @@ module "eks_example_complete" {
 
   worker_groups_launch_template = [
     {
-      instance_type = var.instance_type
+      instance_type = "m6i.large"
       asg_desired_capacity = 2
     }
   ]
+
+  vpc_enabled = true
 }
