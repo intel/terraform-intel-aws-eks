@@ -2,7 +2,9 @@
 ####     Intel      ####
 ########################
 
-variable "instance_type"{}
+variable "instance_type"{
+    default = "m6i.large"
+}
 
 ########################
 ####    Required    ####
