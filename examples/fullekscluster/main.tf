@@ -23,7 +23,6 @@ module "eks" {
     Environment = "test"
   }
 
-  # EC2 instance type 
   worker_groups_launch_template = [
     {
       launch_template_id = aws_launch_template.worker_group_template.id
