@@ -6,7 +6,7 @@ module "eks" {
   source = "terraform-aws-modules/eks/aws"
 
   cluster_name = "my-eks-cluster"
-  subnets = ["subnet-049df61146f12", "subnet-049df61146f13", "subnet-049df61146f14"]
+  subnets = var.subnets
   vpc_id = "vpc-049df61146f12"
   tags = {
     Terraform = "True"
