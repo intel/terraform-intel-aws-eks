@@ -9,4 +9,6 @@
 ########################
 ####     Other      ####
 ########################
-variable "version"{}
+variable "version"{
+    type = number
+}
