@@ -13,8 +13,9 @@ This file documents the HashiCorp Sentinel policies that apply to this module
 ## EKS Policy
 Description: The configured "instance_type" should be an Intel Xeon 3rd Generation(code-named Ice Lake) Scalable processors
 
-Resource type: eks_managed_node_group_defaults
-               self_managed_node_groups
+Resource type: aws_eks_managed_node_group
+               aws_launch_template
+               aws_autoscaling_group
 
 Parameter: instance_type
 
