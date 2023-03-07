@@ -36,7 +36,7 @@ locals {
 ################################################################################
 
 module "eks" {
-  source = "terraform-aws-modules/eks/aws//examples/complete"
+  source = "terraform-aws-modules/eks/aws"
 
   cluster_name                   = local.name
   cluster_endpoint_public_access = true
@@ -133,7 +133,7 @@ module "eks" {
 
   self_managed_node_groups = {
     spot = {
-      instance_type = "m5.large"
+      instance_type = var.instance_type
       instance_market_options = {
         market_type = "spot"
       }
@@ -157,7 +157,7 @@ module "eks" {
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
     ami_type       = "AL2_x86_64"
-    instance_types = ["m6i.large", "m5.large", "m5n.large", "m5zn.large"]
+    instance_types = var.instance_types
 
     attach_cluster_primary_security_group = true
     vpc_security_group_ids                = [aws_security_group.additional.id]
@@ -173,7 +173,7 @@ module "eks" {
       max_size     = 10
       desired_size = 1
 
-      instance_types = ["t3.large"]
+      instance_types = var.instance_type1
       capacity_type  = "SPOT"
       labels = {
         Environment = "test"
@@ -300,7 +300,7 @@ module "eks" {
 ################################################################################
 
 module "eks_managed_node_group" {
-  source = "terraform-aws-modules/eks/aws//examples/complete/modules/eks-managed-node-group"
+  source = "terraform-aws-modules/eks/aws//examples/eks_managed_node_group"
 
   name            = "separate-eks-mng"
   cluster_name    = module.eks.cluster_name
@@ -330,7 +330,7 @@ module "eks_managed_node_group" {
 }
 
 module "self_managed_node_group" {
-  source = "terraform-aws-modules/eks/aws//examples/complete/modules/self-managed-node-group"
+  source = "terraform-aws-modules/eks/aws//examples/self_managed_node_group"
 
   name                = "separate-self-mng"
   cluster_name        = module.eks.cluster_name
@@ -338,7 +338,7 @@ module "self_managed_node_group" {
   cluster_endpoint    = module.eks.cluster_endpoint
   cluster_auth_base64 = module.eks.cluster_certificate_authority_data
 
-  instance_type = "m5.large"
+  instance_type = var.instance_type2
 
   subnet_ids = module.vpc.private_subnets
   vpc_security_group_ids = [
@@ -350,7 +350,7 @@ module "self_managed_node_group" {
 }
 
 module "fargate_profile" {
-  source = "terraform-aws-modules/eks/aws//examples/complete/modules/fargate-profile"
+  source = "terraform-aws-modules/eks/aws//examples/fargate_profile"
 
   name         = "separate-fargate-profile"
   cluster_name = module.eks.cluster_name
@@ -362,34 +362,35 @@ module "fargate_profile" {
 
   tags = merge(local.tags, { Separate = "fargate-profile" })
 }
-
+/*
 ################################################################################
 # Disabled creation
 ################################################################################
 
 module "disabled_eks" {
-  source = "terraform-aws-modules/eks/aws//examples/complete"
+  source = "terraform-aws-modules/eks/aws"
 
   create = false
 }
 
 module "disabled_fargate_profile" {
-  source = "terraform-aws-modules/eks/aws//examples/complete/modules/fargate-profile"
+  source = "terraform-aws-modules/eks/aws"
 
   create = false
 }
 
 module "disabled_eks_managed_node_group" {
-  source = "terraform-aws-modules/eks/aws//examples/complete/modules/eks-managed-node-group"
+  source = "terraform-aws-modules/eks/aws"
 
   create = false
 }
 
 module "disabled_self_managed_node_group" {
-  source = "terraform-aws-modules/eks/aws//examples/complete/modules/self-managed-node-group"
+  source = "terraform-aws-modules/eks/aws"
 
   create = false
 }
+*/
 
 ################################################################################
 # Supporting resources
