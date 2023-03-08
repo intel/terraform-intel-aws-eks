@@ -29,7 +29,7 @@ locals {
     Example    = local.name
     GithubRepo = "terraform-aws-eks"
     GithubOrg  = "terraform-aws-modules"
-    Owner      = "rajiv.mandal@intel.com"
+    Owner      = "megan.rose.lee@intel.com"
     Duration   = "5"
   }
 }
