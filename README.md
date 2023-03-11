@@ -151,13 +151,11 @@ Note that this example may create resources. Run `terraform destroy` when you do
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
+No requirements.
+
 ## Providers
 
-## Modules
-
-No modules.
-
-## Resources
+No providers.
 
 ## Inputs
 
