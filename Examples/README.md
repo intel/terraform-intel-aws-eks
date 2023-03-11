@@ -1,3 +1,24 @@
+<p align="center">
+  <img src="https://github.com/intel/terraform-intel-aws-postgresql/blob/main/images/logo-classicblue-800px.png?raw=true" alt="Intel Logo" width="250"/>
+</p>
+
+# Intel® Cloud Optimization Modules for Terraform
+
+© Copyright 2022, Intel Corporation
+
+## Amazon EKS Module
+Creates an Amazon Elastic Kubernetes Service (EKS) cluster optimized on 3rd generation of Intel Xeon scalable processors (code named Ice Lake). The example will be creating an EKS cluster with an EKS managed node group. 
+
+
+This is an EKS cluster with a single EKS managed node group. The node group is a collection of Intel Ice Lake based EC2 instance types. This node group is using an autoscaling configuration. Within this example, we have provided parameters to scale the minimum size, desired size and the maximum size of the EKS cluster.
+
+## Usage
+
+See examples folder for code ./examples/Simple-Example/main.tf
+
+Example of main.tf
+
+```hcl
 provider "aws" {
   region = local.region
 }
@@ -105,3 +126,39 @@ resource "aws_security_group" "remote_access" {
 
   tags = merge(local.tags, { Name = "${local.name}-remote" })
 }
+```
+
+Run Terraform
+
+```hcl
+terraform init  
+terraform plan
+terraform apply
+
+```
+
+Note that this example may create resources. Run `terraform destroy` when you don't need these resources anymore.
+
+## Considerations  
+- The AWS region is provided within the example. Update the region to your region of choice
+- The EKS cluster is created in the VPC provided within the example. Update the VPC value to create the cluster in your VPC of choice
+- The VM has a public IP address. If you want your VM to not have a public IP
+- The subnet_ids and control_plane_subnet_ids parameters are provided in the example. Each of these parameters need two subnets within your VPC. All the subnets used in these parameters should be unique
+
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+## Providers
+
+## Modules
+
+No modules.
+
+## Resources
+
+## Inputs
+
+
+## Outputs
+
+<!-- END_TF_DOCS -->

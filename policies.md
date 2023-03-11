@@ -16,7 +16,7 @@ Description: The configured "instance_type" should be Intel Xeon 3rd Generation(
 
 Resource type: aws_eks_managed_node_group
 
-Parameter: instance_type
+Parameter: instance_types
 
 Allowed Types
 
