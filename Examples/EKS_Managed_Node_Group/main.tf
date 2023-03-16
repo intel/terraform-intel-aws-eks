@@ -1,39 +1,13 @@
-<p align="center">
-  <img src="https://github.com/intel/terraform-intel-aws-postgresql/blob/main/images/logo-classicblue-800px.png?raw=true" alt="Intel Logo" width="250"/>
-</p>
+#########################################################
+# Local variables, modify for your needs                #
+#########################################################
 
-# Intel® Cloud Optimization Modules for Terraform
-
-© Copyright 2022, Intel Corporation
-
-## Amazon EKS Module
-Creates an Amazon Elastic Kubernetes Service (EKS) cluster optimized on 3rd generation of Intel Xeon scalable processors (code named Ice Lake). The example will be creating an EKS cluster with an EKS managed node group. 
-
-
-This is an EKS cluster with a single EKS managed node group. The node group is a collection of Intel Ice Lake based EC2 instance types. This node group is using an autoscaling configuration. Within this example, we have provided parameters to scale the minimum size, desired size and the maximum size of the EKS cluster.
-
-## Usage
-
-See examples folder for code ./examples/Simple-Example/main.tf
-
-Example of main.tf
-
-```hcl
-provider "aws" {
-  region = local.region
-}
-
-provider "kubernetes" {
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    command     = "aws"
-    # This requires the awscli to be installed locally where Terraform is executed
-    args = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
-  }
-}
+# See policies.md for recommended instances
+# General Purpose:** m6i.large, m6i.xlarge, m6i.2xlarge, m6i.4xlarge, m6i.8xlarge, m6i.12xlarge, m6i.16xlarge, m6i.24xlarge, m6i.32xlarge, m6i.metal, m6in.large, m6in.xlarge, m6in.2xlarge, m6in.4xlarge, m6in.8xlarge, m6in.12xlarge, m6in.16xlarge, m6in.24xlarge, m6in.32xlarge
+# Compute Optimized:** c6in.large, c6in.xlarge, c6in.2xlarge, c6in.4xlarge, c6in.8xlarge, c6in.12xlarge, c6in.16xlarge, c6in.24xlarge, c6in.32xlarge c6i.large, c6i.xlarge, c6i.2xlarge, c6i.4xlarge, c6i.8xlarge, c6i.12xlarge, c6i.16xlarge, c6i.24xlarge, c6i.32xlarge, c6i.metal
+# Memory Optimized:** r7iz.large, r7iz.xlarge, r7iz.2xlarge, r7iz.4xlarge, r7iz.8xlarge, r7iz.12xlarge, r7iz.24xlarge, r7iz.32xlarge, r7iz.metal16xl, r7iz.metal32xl, r6in.large, r6in.xlarge, r6in.2xlarge, r6in.4xlarge, r6in.8xlarge, r6in.12xlarge, r6in.16xlarge, r6in.24xlarge, r6in.32xlarge, r6i.large, r6i.xlarge, r6i.2xlarge, r6i.4xlarge, r6i.8xlarge, r6i.12xlarge, r6i.16xlarge, r6i.24xlarge, r6i.32xlarge, r6i.metal x2idn.16xlarge, x2idn.24xlarge, x2idn.32xlarge, x2idn.metal x2iedn.xlarge, x2iedn.2xlarge, x2iedn.4xlarge, x2iedn.8xlarge, x2iedn.16xlarge, x2iedn.24xlarge, x2iedn.32xlarge, x2iedn.metal
+# Storage Optimized:** i4i.large, i4i.xlarge, i4i.2xlarge, i4i.4xlarge, i4i.8xlarge, i4i.16xlarge, i4i.32xlarge, i4i.metal
+# Accelerated Compute:** trn1.2xlarge, trn1.32xlarge
 
 locals {
   name            = "ex-${replace(basename(path.cwd), "_", "-")}"
@@ -45,7 +19,7 @@ locals {
     Example    = local.name
     GithubRepo = "terraform-aws-eks"
     GithubOrg  = "terraform-aws-modules"
-    Owner      = "rajiv.mandal@intel.com"
+    Owner      = "john.doe@abc.com"
     Duration   = "5"
   }
 }
@@ -55,7 +29,8 @@ locals {
 ################################################################################
 
 module "eks" {
-  source = "terraform-aws-modules/eks/aws"
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 19.10.0"
 
   cluster_name                   = local.name
   cluster_version                = local.cluster_version
@@ -126,39 +101,3 @@ resource "aws_security_group" "remote_access" {
 
   tags = merge(local.tags, { Name = "${local.name}-remote" })
 }
-```
-
-Run Terraform
-
-```hcl
-terraform init  
-terraform plan
-terraform apply
-
-```
-
-Note that this example may create resources. Run `terraform destroy` when you don't need these resources anymore.
-
-## Considerations  
-- The AWS region is provided within the example. Update the region to your region of choice
-- The EKS cluster is created in the VPC provided within the example. Update the VPC value to create the cluster in your VPC of choice
-- The VM has a public IP address. If you want your VM to not have a public IP
-- The subnet_ids and control_plane_subnet_ids parameters are provided in the example. Each of these parameters need two subnets within your VPC. All the subnets used in these parameters should be unique
-
-<!-- BEGIN_TF_DOCS -->
-## Requirements
-
-## Providers
-
-## Modules
-
-No modules.
-
-## Resources
-
-## Inputs
-
-
-## Outputs
-
-<!-- END_TF_DOCS -->
