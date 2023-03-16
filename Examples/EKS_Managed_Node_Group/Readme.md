@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/intel/terraform-intel-aws-postgresql/blob/main/images/logo-classicblue-800px.png?raw=true" alt="Intel Logo" width="250"/>
+  <img src="https://github.com/OTCShare2/terraform-intel-aws-eks/blob/main/images/logo-classicblue-800px.png?raw=true" alt="Intel Logo" width="250"/>
 </p>
 
 # Intel® Cloud Optimization Modules for Terraform
@@ -7,37 +7,22 @@
 © Copyright 2022, Intel Corporation
 
 ## Amazon EKS Module
-In this repository, we are providing an example to create an Amazon Elastic Kubernetes Service (EKS) cluster optimized on 3rd generation of Intel Xeon scalable processors (code named Ice Lake). The example will be creating an EKS cluster with an EKS managed node group. 
+Creates an Amazon Elastic Kubernetes Service (EKS) cluster optimized on 3rd generation of Intel Xeon scalable processors (code named Ice Lake). The example will be creating an EKS cluster with an EKS managed node group. 
 
-As of the time of creating this example, the EKS managed node group does not support the 4th generation on Inten Xeon scalable processors (code named Sapphire Rapids). However, if you are going to use the self managed node group within EKS instead, you can spin up the EKS cluster on Sapphire Rapids CPU based EC2 instances. 
 
-We are leveraging the Amazon EKS Terraform module that is already available on Terraform registry - https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest
+This is an EKS cluster with a single EKS managed node group. The node group is a collection of Intel Ice Lake based EC2 instance types. This node group is using an autoscaling configuration. Within this example, we have provided parameters to scale the minimum size, desired size and the maximum size of the EKS cluster.
 
-Our example will create an EKS cluster with a single EKS managed node group. The node group is a collection of Intel Ice Lake based EC2 instance types. This node group is using an autoscaling configuration. Within this example, we have provided parameters to scale the minimum size, desired size and the maximum size of the EKS cluster.
+As of the time of publication of this example, Intel 4th gen Xeon sclable processors (code named Sapphire Rapids) is not available within EKS Managed Node Group. The latest Intel Xeon CPU available is 3rd gen scalable processors (code named Ice Lake).
+
+<b>Note:</b> However, as of the time of publication of this example, 4th gen Sapphire Rapids instances are available in private preview on EKS clusters using self managed node group.
 
 ## Usage
 
-See examples folder for code ./examples/Simple-Example/main.tf
+See examples folder for code ./examples/Simple_EKS_Managed_Node_Group/main.tf
 
 Example of main.tf
 
 ```hcl
-provider "aws" {
-  region = local.region
-}
-
-provider "kubernetes" {
-  host                   = module.eks.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    command     = "aws"
-    # This requires the awscli to be installed locally where Terraform is executed
-    args = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
-  }
-}
-
 locals {
   name            = "ex-${replace(basename(path.cwd), "_", "-")}"
   cluster_version = "1.24"
@@ -48,7 +33,7 @@ locals {
     Example    = local.name
     GithubRepo = "terraform-aws-eks"
     GithubOrg  = "terraform-aws-modules"
-    Owner      = "rajiv.mandal@intel.com"
+    Owner      = "john.doe@abc.com"
     Duration   = "5"
   }
 }
@@ -58,7 +43,8 @@ locals {
 ################################################################################
 
 module "eks" {
-  source = "terraform-aws-modules/eks/aws"
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 19.10.0"
 
   cluster_name                   = local.name
   cluster_version                = local.cluster_version
@@ -145,31 +131,20 @@ Note that this example may create resources. Run `terraform destroy` when you do
 ## Considerations  
 - The AWS region is provided within the example. Update the region to your region of choice
 - The EKS cluster is created in the VPC provided within the example. Update the VPC value to create the cluster in your VPC of choice
-- The VM has a public IP address. If you want your VM to not have a public IP
+- The cluster has a public IP address. If you want your VM to not have a public IP, override the value accordingly
 - The subnet_ids and control_plane_subnet_ids parameters are provided in the example. Each of these parameters need two subnets within your VPC. All the subnets used in these parameters should be unique
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
-
 ## Providers
-
-No providers.
 
 ## Modules
 
-No modules.
-
 ## Resources
-
-No resources.
 
 ## Inputs
 
-No inputs.
-
 ## Outputs
 
-No outputs.
 <!-- END_TF_DOCS -->

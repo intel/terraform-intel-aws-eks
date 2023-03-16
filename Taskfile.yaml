@@ -1,0 +1,72 @@
+---
+version: '3'
+
+tasks:
+
+  init:
+    desc: Initialize workstation dependencies with Brew
+    cmds:
+      - brew install {{.DEPS}} {{.CLI_ARGS}}
+      - $SHELL $(brew --prefix asdf)/libexec/asdf.sh
+      - task: asdf
+      - task: pre-commit
+    preconditions:
+      - sh: command -v brew
+        msg: |
+          Homebrew is not installed. Using MacOS, Linux or WSL?
+          Head over to https://brew.sh to get up and running.
+    vars:
+      DEPS: >-
+        asdf
+        go-task/tap/go-task
+        pre-commit
+
+  asdf:
+    desc: Add asdf repos for dependencies and install the binaries
+    cmds:
+      - asdf plugin add checkov
+      - asdf plugin add pre-commit
+      - asdf plugin add python
+      - asdf plugin add shellcheck
+      - asdf plugin add terraform-docs
+      - asdf plugin add terraform
+      - asdf plugin add tfsec
+      - asdf plugin add tfupdate
+      - asdf plugin add vault
+      - asdf plugin add shfmt
+      - asdf install
+    ignore_error: true
+    preconditions:
+      - sh: command -v asdf
+        msg: |
+          asdf is not installed. You may need to restart your shell and re-execute this task
+
+  asdf-upgrade:
+    desc: Reshims the binaries for asdf after asdf is updated
+    cmds:
+      - brew upgrade asdf
+      - rm -rf ~/.asdf/shims && asdf reshim
+    preconditions:
+      - sh: command -v asdf
+        msg: |
+          asdf is not installed. You may need to restart your shell and re-execute this task
+
+  asdf-reshim:
+    desc: Reshims the binaries for asdf after asdf is updated
+    cmds:
+      - rm -rf ~/.asdf/shims && asdf reshim
+    preconditions:
+      - sh: command -v asdf
+        msg: |
+          asdf is not installed. You may need to restart your shell and re-execute this task
+
+  pre-commit:
+    desc: Installs the pre-commit hooks
+    cmds:
+      - pre-commit install --install-hooks
+      - pre-commit autoupdate
+    ignore_error: true
+    preconditions:
+      - sh: command -v pre-commit
+        msg: |
+          pre-commit is not installed. You may need to restart your shell and re-execute this task
