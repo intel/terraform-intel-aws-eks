@@ -13,7 +13,7 @@ locals {
   name            = "ex-${replace(basename(path.cwd), "_", "-")}"
   cluster_version = "1.24"
   region          = "us-east-1"
-  vpc_id          = "vpc-5ea60f23"
+  vpc_id          = "vpc-example12" # Update with your own VPC id that is available in the region you are testing
 
   tags = {
     Example    = local.name
@@ -36,8 +36,11 @@ module "eks" {
   cluster_version                = local.cluster_version
   cluster_endpoint_public_access = true
   vpc_id                         = local.vpc_id
-  subnet_ids                     = ["subnet-6fa98422", "subnet-9478e5f2"]
-  control_plane_subnet_ids       = ["subnet-a3009efc", "subnet-add384a3"]
+
+  # Update with your own subnet ids in the vpc you are testing. Two unique subnet ids needed for subnet_ids
+  # Two additional unique subnet ids needed for control_plane_subnet_ids
+  subnet_ids                     = ["subnet-example12", "subnet-example23"] # Change based on your vpcs and subnets
+  control_plane_subnet_ids       = ["subnet-example34", "subnet-example45"] # Change based on your vpcs and subnets
 
   eks_managed_node_group_defaults = {
     ami_type                   = "AL2_x86_64"
