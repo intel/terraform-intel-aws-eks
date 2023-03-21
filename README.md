@@ -42,13 +42,13 @@ locals {
   name            = "ex-${replace(basename(path.cwd), "_", "-")}"
   cluster_version = "1.24"
   region          = "us-east-1"
-  vpc_id          = "vpc-5ea60f23"
+  vpc_id          = "<YOUR-VPD-ID>"
 
   tags = {
     Example    = local.name
     GithubRepo = "terraform-aws-eks"
     GithubOrg  = "terraform-aws-modules"
-    Owner      = "rajiv.mandal@intel.com"
+    Owner      = "<user@email.com>"
     Duration   = "5"
   }
 }
