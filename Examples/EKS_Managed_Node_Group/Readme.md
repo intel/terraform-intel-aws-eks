@@ -18,7 +18,7 @@ As of the time of publication of this example, Intel 4th gen Xeon sclable proces
 
 ## Usage
 
-See examples folder for code ./examples/Simple_EKS_Managed_Node_Group/main.tf
+See examples folder for code ./examples/EKS_Managed_Node_Group/main.tf
 
 Example of main.tf
 
@@ -39,6 +39,10 @@ locals {
   cluster_version = "1.24"
   region          = "us-east-1"
   vpc_id          = "vpc-example12" # Update with your own VPC id that is available in the region you are testing
+
+# Defining the instance types that will be allowed in the EKS managed node group. This includes the latest Intel CPU
+# that is in the EKS Managed Node group
+  instance_types  = ["m6i.large", "c6i.large", "m6i.2xlarge", "r6i.large"]
 
   tags = {
     Example    = local.name
@@ -69,7 +73,7 @@ module "eks" {
 
   eks_managed_node_group_defaults = {
     ami_type                   = "AL2_x86_64"
-    instance_types             = ["m6i.large", "c6i.large", "m6i.2xlarge", "r6i.large"]
+    instance_types             = local.instance_types
     iam_role_attach_cni_policy = true
   }
 

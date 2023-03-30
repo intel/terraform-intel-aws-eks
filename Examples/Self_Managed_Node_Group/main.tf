@@ -14,10 +14,7 @@ locals {
   cluster_version = "1.24"
   region          = "us-east-1"
   vpc_id          = "vpc-example12" # Update with your own VPC id that is available in the region you are testing
-
-  # Defining the instance types that will be allowed in the EKS managed node group. This includes the latest Intel CPU
-  # that is in the EKS Managed Node group
-  instance_types = ["m6i.large", "c6i.large", "m6i.2xlarge", "r6i.large"]
+  instance_type   = "r7iz.large"
 
   tags = {
     Example    = local.name
@@ -39,37 +36,45 @@ module "eks" {
   cluster_name                   = local.name
   cluster_version                = local.cluster_version
   cluster_endpoint_public_access = true
-  vpc_id                         = local.vpc_id
+
+  cluster_addons = {
+    coredns = {
+      most_recent = true
+    }
+    kube-proxy = {
+      most_recent = true
+    }
+    vpc-cni = {
+      most_recent = true
+    }
+  }
+
+  vpc_id = local.vpc_id
 
   # Update with your own subnet ids in the vpc you are testing. Two unique subnet ids needed for subnet_ids
   # Two additional unique subnet ids needed for control_plane_subnet_ids
   subnet_ids               = ["subnet-example12", "subnet-example23"] # Change based on your vpcs and subnets
   control_plane_subnet_ids = ["subnet-example34", "subnet-example45"] # Change based on your vpcs and subnets
 
-  eks_managed_node_group_defaults = {
-    ami_type                   = "AL2_x86_64"
-    instance_types             = local.instance_types
-    iam_role_attach_cni_policy = true
+  # Self managed node groups will not automatically create the aws-auth configmap so we need to
+  create_aws_auth_configmap = true
+  manage_aws_auth_configmap = true
+
+  self_managed_node_group_defaults = {
+    # enable discovery of autoscaling groups by cluster-autoscaler
+    autoscaling_group_tags = {
+      "k8s.io/cluster-autoscaler/enabled" : true,
+      "k8s.io/cluster-autoscaler/${local.name}" : "owned",
+    }
   }
 
-  eks_managed_node_groups = {
-    # Default node group - as provided by AWS EKS
-    default-node-group = {
-      # By default, the module creates a launch template to ensure tags are propagated to instances, etc.,
-      # so we need to disable it to use the default template provided by the AWS EKS managed node group service
-      use_custom_launch_template = false
-
-      disk_size = 50
-
-      min_size     = 2
-      max_size     = 6
-      desired_size = 2
-
-      # Remote access cannot be specified with a launch template
-      remote_access = {
-        ec2_ssh_key               = module.key_pair.key_pair_name
-        source_security_group_ids = [aws_security_group.remote_access.id]
-      }
+  self_managed_node_groups = {
+    # Default node group - overriding the instance type and the auto scaling configuration
+    default_node_group = {
+      instance_type = local.instance_type
+      min_size      = 2
+      max_size      = 4
+      desired_size  = 2
     }
   }
   tags = local.tags
