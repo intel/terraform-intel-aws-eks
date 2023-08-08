@@ -11,8 +11,6 @@ Creates an Amazon Elastic Kubernetes Service (EKS) cluster optimized on 4th gene
 
 This is an EKS cluster with a single self managed node group. We are using the default node group. The node group is a collection of Intel Sapphire Rapids based EC2 instance types. This node group is using an autoscaling configuration. Within this example, we have provided parameters to scale the minimum size, desired size and the maximum size of the node group within the EKS cluster.
 
-As of the time of publication of this example, EC2 instances based on Intel 4th gen Xeon sclable processors (code named Sapphire Rapids) is available in private preview.
-
 ## Usage
 
 See examples folder for code ./examples/Self_Managed_Node_Group/main.tf
@@ -25,7 +23,7 @@ Example of main.tf
 #########################################################
 
 # See policies.md for recommended instances
-# General Purpose:** m6i.large, m6i.xlarge, m6i.2xlarge, m6i.4xlarge, m6i.8xlarge, m6i.12xlarge, m6i.16xlarge, m6i.24xlarge, m6i.32xlarge, m6i.metal, m6in.large, m6in.xlarge, m6in.2xlarge, m6in.4xlarge, m6in.8xlarge, m6in.12xlarge, m6in.16xlarge, m6in.24xlarge, m6in.32xlarge
+# General Purpose:** m7i.large, m7i.xlarge, m7i.2xlarge, m7i.4xlarge, m7i.8xlarge, m7i.12xlarge, m7i.16xlarge, m7i.24xlarge, m7i.48xlarge, m7i-flex.large, m7i-flex.xlarge, m7i-flex.2xlarge, m7i-flex.4xlarge, m7i-flex.8xlarge, m6i.large, m6i.xlarge, m6i.2xlarge, m6i.4xlarge, m6i.8xlarge, m6i.12xlarge, m6i.16xlarge, m6i.24xlarge, m6i.32xlarge, m6i.metal, m6in.large, m6in.xlarge, m6in.2xlarge, m6in.4xlarge, m6in.8xlarge, m6in.12xlarge, m6in.16xlarge, m6in.24xlarge, m6in.32xlarge
 # Compute Optimized:** c6in.large, c6in.xlarge, c6in.2xlarge, c6in.4xlarge, c6in.8xlarge, c6in.12xlarge, c6in.16xlarge, c6in.24xlarge, c6in.32xlarge c6i.large, c6i.xlarge, c6i.2xlarge, c6i.4xlarge, c6i.8xlarge, c6i.12xlarge, c6i.16xlarge, c6i.24xlarge, c6i.32xlarge, c6i.metal
 # Memory Optimized:** r7iz.large, r7iz.xlarge, r7iz.2xlarge, r7iz.4xlarge, r7iz.8xlarge, r7iz.12xlarge, r7iz.24xlarge, r7iz.32xlarge, r7iz.metal16xl, r7iz.metal32xl, r6in.large, r6in.xlarge, r6in.2xlarge, r6in.4xlarge, r6in.8xlarge, r6in.12xlarge, r6in.16xlarge, r6in.24xlarge, r6in.32xlarge, r6i.large, r6i.xlarge, r6i.2xlarge, r6i.4xlarge, r6i.8xlarge, r6i.12xlarge, r6i.16xlarge, r6i.24xlarge, r6i.32xlarge, r6i.metal x2idn.16xlarge, x2idn.24xlarge, x2idn.32xlarge, x2idn.metal x2iedn.xlarge, x2iedn.2xlarge, x2iedn.4xlarge, x2iedn.8xlarge, x2iedn.16xlarge, x2iedn.24xlarge, x2iedn.32xlarge, x2iedn.metal
 # Storage Optimized:** i4i.large, i4i.xlarge, i4i.2xlarge, i4i.4xlarge, i4i.8xlarge, i4i.16xlarge, i4i.32xlarge, i4i.metal
@@ -36,7 +34,7 @@ locals {
   cluster_version = "1.24"
   region          = "us-east-1"
   vpc_id          = "vpc-example12" # Update with your own VPC id that is available in the region you are testing
-  instance_type = "r7iz.large"
+  instance_type = "m7i.large"
 
   tags = {
     Example    = local.name
@@ -75,8 +73,8 @@ module "eks" {
 
   # Update with your own subnet ids in the vpc you are testing. Two unique subnet ids needed for subnet_ids
   # Two additional unique subnet ids needed for control_plane_subnet_ids
-  subnet_ids                     = ["subnet-example12", "subnet-example23"] # Change based on your vpcs and subnets
-  control_plane_subnet_ids       = ["subnet-example34", "subnet-example45"] # Change based on your vpcs and subnets
+  subnet_ids               = ["subnet-example12", "subnet-example23"] # Change based on your vpcs and subnets
+  control_plane_subnet_ids = ["subnet-example34", "subnet-example45"] # Change based on your vpcs and subnets
 
   # Self managed node groups will not automatically create the aws-auth configmap so we need to
   create_aws_auth_configmap = true
@@ -138,7 +136,17 @@ resource "aws_security_group" "remote_access" {
 ```
 
 Run Terraform
+Update the VPC Id in main.tf on the example
+```hcl
+vpc_id          = "vpc-example12" # Update with your own VPC id that is available in the region you are testing
+```
+Update the subnet ids and control plane subnet ids in main.tf of the example
+```hcl
+subnet_ids               = ["subnet-example12", "subnet-example23"] # Change based on your vpcs and subnets
+control_plane_subnet_ids = ["subnet-example34", "subnet-example45"] # Change based on your vpcs and subnets
+```
 
+Run ther below terraform commands in command line
 ```hcl
 terraform init  
 terraform plan
