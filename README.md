@@ -9,7 +9,7 @@
 ## Amazon EKS Module
 In this repository, we are providing an example to create an Amazon Elastic Kubernetes Service (EKS) cluster optimized on 4th generation of Intel Xeon scalable processors (code named Sapphire Rapids). The example will be creating an EKS cluster with a self managed node group.
 
-As of the time of creating this example, the EKS managed node group does not support the 4th generation on Inten Xeon scalable processors (code named Sapphire Rapids). However, if you are going to use the self managed node group within EKS instead, you can spin up the EKS cluster on Sapphire Rapids CPU based EC2 instances. 
+As of the time of creating this example, the EKS managed node group does not support the 4th generation on Intel Xeon scalable processors (code named Sapphire Rapids). However, if you are going to use the self managed node group within EKS instead, you can spin up the EKS cluster on Sapphire Rapids CPU based EC2 instances. 
 
 We are leveraging the Amazon EKS Terraform module that is already available on Terraform registry - https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest
 
