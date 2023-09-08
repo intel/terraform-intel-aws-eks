@@ -1,7 +1,7 @@
 © Copyright 2022, Intel Corporation
 
 Credit:
-"This project incorporates code from terraform-aws-modules https://github.com/terraform-google-modules/terraform-google-vm under the Apache-2.0 license.”
+"This project incorporates code from terraform-aws-modules https://github.com/terraform-aws-modules/terraform-aws-eks under the Apache-2.0 license.”
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
