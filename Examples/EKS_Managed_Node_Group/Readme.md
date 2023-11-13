@@ -7,14 +7,9 @@
 © Copyright 2022, Intel Corporation
 
 ## Amazon EKS Module
-Creates an Amazon Elastic Kubernetes Service (EKS) cluster optimized on 3rd generation of Intel Xeon scalable processors (code named Ice Lake). The example will be creating an EKS cluster with an EKS managed node group. 
-
+Creates an Amazon Elastic Kubernetes Service (EKS) cluster optimized on 4th generation of Intel Xeon scalable processors (code named Sapphire Rapids). The example will be creating an EKS cluster with an EKS managed node group.
 
 This is an EKS cluster with a single EKS managed node group. The node group is a collection of Intel Ice Lake based EC2 instance types. This node group is using an autoscaling configuration. Within this example, we have provided parameters to scale the minimum size, desired size and the maximum size of the EKS cluster.
-
-As of the time of publication of this example, Intel 4th gen Xeon sclable processors (code named Sapphire Rapids) is not available within EKS Managed Node Group. The latest Intel Xeon CPU available is 3rd gen scalable processors (code named Ice Lake).
-
-<b>Note:</b> However, as of the time of publication of this example, 4th gen Sapphire Rapids instances are available in private preview on EKS clusters using self managed node group.
 
 ## Usage
 
@@ -28,9 +23,9 @@ Example of main.tf
 #########################################################
 
 # See policies.md for recommended instances
-# General Purpose:** m6i.large, m6i.xlarge, m6i.2xlarge, m6i.4xlarge, m6i.8xlarge, m6i.12xlarge, m6i.16xlarge, m6i.24xlarge, m6i.32xlarge, m6i.metal, m6in.large, m6in.xlarge, m6in.2xlarge, m6in.4xlarge, m6in.8xlarge, m6in.12xlarge, m6in.16xlarge, m6in.24xlarge, m6in.32xlarge
-# Compute Optimized:** c6in.large, c6in.xlarge, c6in.2xlarge, c6in.4xlarge, c6in.8xlarge, c6in.12xlarge, c6in.16xlarge, c6in.24xlarge, c6in.32xlarge c6i.large, c6i.xlarge, c6i.2xlarge, c6i.4xlarge, c6i.8xlarge, c6i.12xlarge, c6i.16xlarge, c6i.24xlarge, c6i.32xlarge, c6i.metal
-# Memory Optimized:** r7iz.large, r7iz.xlarge, r7iz.2xlarge, r7iz.4xlarge, r7iz.8xlarge, r7iz.12xlarge, r7iz.24xlarge, r7iz.32xlarge, r7iz.metal16xl, r7iz.metal32xl, r6in.large, r6in.xlarge, r6in.2xlarge, r6in.4xlarge, r6in.8xlarge, r6in.12xlarge, r6in.16xlarge, r6in.24xlarge, r6in.32xlarge, r6i.large, r6i.xlarge, r6i.2xlarge, r6i.4xlarge, r6i.8xlarge, r6i.12xlarge, r6i.16xlarge, r6i.24xlarge, r6i.32xlarge, r6i.metal x2idn.16xlarge, x2idn.24xlarge, x2idn.32xlarge, x2idn.metal x2iedn.xlarge, x2iedn.2xlarge, x2iedn.4xlarge, x2iedn.8xlarge, x2iedn.16xlarge, x2iedn.24xlarge, x2iedn.32xlarge, x2iedn.metal
+# General Purpose:** m7i.large, m7i.xlarge, m7i.2xlarge, m7i.4xlarge, m7i.8xlarge, m7i.12xlarge, m7i.16xlarge, m7i.24xlarge, m7i.48xlarge, m7i.metal-24xl, m7i.metal-48xl, m7i-flex.large, m7i-flex.xlarge, m7i-flex.2xlarge, m7i-flex.4xlarge, m7i-flex.8xlarge, m6i.large, m6i.xlarge, m6i.2xlarge, m6i.4xlarge, m6i.8xlarge, m6i.12xlarge, m6i.16xlarge, m6i.24xlarge, m6i.32xlarge, m6i.metal, m6in.large, m6in.xlarge, m6in.2xlarge, m6in.4xlarge, m6in.8xlarge, m6in.12xlarge, m6in.16xlarge, m6in.24xlarge, m6in.32xlarge
+# Compute Optimized:** c7i.large, c7i.xlarge, c7i.2xlarge, c7i.4xlarge, c7i.8xlarge, c7i.12xlarge, c7i.16xlarge, c7i.24xlarge, c7i.48xlarge, c7i.metal-24xl, c7i.metal-48xl, c6in.large, c6in.xlarge, c6in.2xlarge, c6in.4xlarge, c6in.8xlarge, c6in.12xlarge, c6in.16xlarge, c6in.24xlarge, c6in.32xlarge c6i.large, c6i.xlarge, c6i.2xlarge, c6i.4xlarge, c6i.8xlarge, c6i.12xlarge, c6i.16xlarge, c6i.24xlarge, c6i.32xlarge, c6i.metal
+# Memory Optimized:** r7i.large, r7i.xlarge, r7i.2xlarge, r7i.4xlarge, r7i.8xlarge, r7i.12xlarge, r7i.16xlarge, r7i.24xlarge, r7i.48xlarge, r7i.metal-24xl, r7i.metal-48xl, r7iz.large, r7iz.xlarge, r7iz.2xlarge, r7iz.4xlarge, r7iz.8xlarge, r7iz.12xlarge, r7iz.16xlarge, r7iz.32xlarge, r7iz.metal-16xl, r7iz.metal-32xl, r6in.large, r6in.xlarge, r6in.2xlarge, r6in.4xlarge, r6in.8xlarge, r6in.12xlarge, r6in.16xlarge, r6in.24xlarge, r6in.32xlarge, r6i.large, r6i.xlarge, r6i.2xlarge, r6i.4xlarge, r6i.8xlarge, r6i.12xlarge, r6i.16xlarge, r6i.24xlarge, r6i.32xlarge, r6i.metal x2idn.16xlarge, x2idn.24xlarge, x2idn.32xlarge, x2idn.metal x2iedn.xlarge, x2iedn.2xlarge, x2iedn.4xlarge, x2iedn.8xlarge, x2iedn.16xlarge, x2iedn.24xlarge, x2iedn.32xlarge, x2iedn.metal
 # Storage Optimized:** i4i.large, i4i.xlarge, i4i.2xlarge, i4i.4xlarge, i4i.8xlarge, i4i.16xlarge, i4i.32xlarge, i4i.metal
 # Accelerated Compute:** trn1.2xlarge, trn1.32xlarge
 
@@ -40,9 +35,9 @@ locals {
   region          = "us-east-1"
   vpc_id          = "vpc-example12" # Update with your own VPC id that is available in the region you are testing
 
-# Defining the instance types that will be allowed in the EKS managed node group. This includes the latest Intel CPU
-# that is in the EKS Managed Node group
-  instance_types  = ["m6i.large", "c6i.large", "m6i.2xlarge", "r6i.large"]
+  # Defining the instance types that will be allowed in the EKS managed node group. This includes the latest Intel CPU
+  # that is in the EKS Managed Node group
+  instance_types = ["m7i.large", "c7i.large"]
 
   tags = {
     Example    = local.name
@@ -68,8 +63,8 @@ module "eks" {
 
   # Update with your own subnet ids in the vpc you are testing. Two unique subnet ids needed for subnet_ids
   # Two additional unique subnet ids needed for control_plane_subnet_ids
-  subnet_ids                     = ["subnet-example12", "subnet-example23"] # Change based on your vpcs and subnets
-  control_plane_subnet_ids       = ["subnet-example34", "subnet-example45"] # Change based on your vpcs and subnets
+  subnet_ids               = ["subnet-example12", "subnet-example23"] # Change based on your vpcs and subnets
+  control_plane_subnet_ids = ["subnet-example34", "subnet-example45"] # Change based on your vpcs and subnets
 
   eks_managed_node_group_defaults = {
     ami_type                   = "AL2_x86_64"
