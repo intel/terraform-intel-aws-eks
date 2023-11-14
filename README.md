@@ -19,6 +19,8 @@ See examples folder for code ./examples/Self_Managed_Node_Group/main.tf
 
 Example of main.tf
 
+<span style="color:red">*If you get Terraform error saying EC2 capacity is not available in the availability zones specified in your example, then try with different availability zones where EC2 capacity is available*</span>
+
 ```hcl
 #########################################################
 # Local variables, modify for your needs                #
@@ -33,19 +35,24 @@ Example of main.tf
 
 
 locals {
-  name            = "ex-${replace(basename(path.cwd), "_", "-")}"
-  cluster_version = "1.24"
+  cluster_version = "1.28"
   region          = "us-east-1"
   vpc_id          = "vpc-example12" # Update with your own VPC id that is available in the region you are testing
   instance_type   = "m7i.large"
 
   tags = {
-    Example    = local.name
     GithubRepo = "terraform-aws-eks"
     GithubOrg  = "terraform-aws-modules"
     Owner      = "john.doe@abc.com"
     Duration   = "5"
   }
+}
+
+################################################################################
+# Random resource for generating unique EKS cluster names
+################################################################################
+resource "random_id" "rid" {
+  byte_length = 5
 }
 
 ################################################################################
@@ -56,7 +63,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.10.0"
 
-  cluster_name                   = local.name
+  cluster_name                   = "my-eks-cluster-${random_id.rid.dec}"
   cluster_version                = local.cluster_version
   cluster_endpoint_public_access = true
 
@@ -87,7 +94,7 @@ module "eks" {
     # enable discovery of autoscaling groups by cluster-autoscaler
     autoscaling_group_tags = {
       "k8s.io/cluster-autoscaler/enabled" : true,
-      "k8s.io/cluster-autoscaler/${local.name}" : "owned",
+      "k8s.io/cluster-autoscaler/my-eks-cluster-${random_id.rid.dec}" : "owned",
     }
   }
 
@@ -107,14 +114,14 @@ module "key_pair" {
   source  = "terraform-aws-modules/key-pair/aws"
   version = "~> 2.0"
 
-  key_name_prefix    = local.name
+  key_name_prefix    = "my-eks-cluster-${random_id.rid.dec}"
   create_private_key = true
 
   tags = local.tags
 }
 
 resource "aws_security_group" "remote_access" {
-  name_prefix = "${local.name}-remote-access"
+  name_prefix = "my-eks-cluster-${random_id.rid.dec}-remote-access"
   description = "Allow remote SSH access"
   vpc_id      = local.vpc_id
 
@@ -134,7 +141,7 @@ resource "aws_security_group" "remote_access" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = merge(local.tags, { Name = "${local.name}-remote" })
+  tags = merge(local.tags, { Name = "my-eks-cluster-${random_id.rid.dec}-remote" })
 }
 ```
 

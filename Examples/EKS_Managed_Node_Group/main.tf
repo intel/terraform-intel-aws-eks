@@ -10,22 +10,26 @@
 # Accelerated Compute:** trn1.2xlarge, trn1.32xlarge
 
 locals {
-  name            = "ex-${replace(basename(path.cwd), "_", "-")}"
-  cluster_version = "1.24"
+  cluster_version = "1.28"
   region          = "us-east-1"
   vpc_id          = "vpc-example12" # Update with your own VPC id that is available in the region you are testing
-
   # Defining the instance types that will be allowed in the EKS managed node group. This includes the latest Intel CPU
   # that is in the EKS Managed Node group
   instance_types = ["m7i.large", "c7i.large"]
 
   tags = {
-    Example    = local.name
     GithubRepo = "terraform-aws-eks"
     GithubOrg  = "terraform-aws-modules"
     Owner      = "john.doe@abc.com"
     Duration   = "5"
   }
+}
+
+################################################################################
+# Random resource for generating unique EKS cluster names
+################################################################################
+resource "random_id" "rid" {
+  byte_length = 5
 }
 
 ################################################################################
@@ -36,7 +40,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.10.0"
 
-  cluster_name                   = local.name
+  cluster_name                   = "my-eks-cluster-${random_id.rid.dec}"
   cluster_version                = local.cluster_version
   cluster_endpoint_public_access = true
   vpc_id                         = local.vpc_id
@@ -79,14 +83,14 @@ module "key_pair" {
   source  = "terraform-aws-modules/key-pair/aws"
   version = "~> 2.0"
 
-  key_name_prefix    = local.name
+  key_name_prefix    = "my-eks-cluster-${random_id.rid.dec}"
   create_private_key = true
 
   tags = local.tags
 }
 
 resource "aws_security_group" "remote_access" {
-  name_prefix = "${local.name}-remote-access"
+  name_prefix = "my-eks-cluster-${random_id.rid.dec}-remote-access"
   description = "Allow remote SSH access"
   vpc_id      = local.vpc_id
 
@@ -106,5 +110,5 @@ resource "aws_security_group" "remote_access" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = merge(local.tags, { Name = "${local.name}-remote" })
+  tags = merge(local.tags, { Name = "my-eks-cluster-${random_id.rid.dec}-remote" })
 }
