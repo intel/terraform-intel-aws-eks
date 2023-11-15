@@ -3,29 +3,33 @@
 #########################################################
 
 # See policies.md for recommended instances
-# General Purpose:** m6i.large, m6i.xlarge, m6i.2xlarge, m6i.4xlarge, m6i.8xlarge, m6i.12xlarge, m6i.16xlarge, m6i.24xlarge, m6i.32xlarge, m6i.metal, m6in.large, m6in.xlarge, m6in.2xlarge, m6in.4xlarge, m6in.8xlarge, m6in.12xlarge, m6in.16xlarge, m6in.24xlarge, m6in.32xlarge
-# Compute Optimized:** c6in.large, c6in.xlarge, c6in.2xlarge, c6in.4xlarge, c6in.8xlarge, c6in.12xlarge, c6in.16xlarge, c6in.24xlarge, c6in.32xlarge c6i.large, c6i.xlarge, c6i.2xlarge, c6i.4xlarge, c6i.8xlarge, c6i.12xlarge, c6i.16xlarge, c6i.24xlarge, c6i.32xlarge, c6i.metal
-# Memory Optimized:** r7iz.large, r7iz.xlarge, r7iz.2xlarge, r7iz.4xlarge, r7iz.8xlarge, r7iz.12xlarge, r7iz.24xlarge, r7iz.32xlarge, r7iz.metal16xl, r7iz.metal32xl, r6in.large, r6in.xlarge, r6in.2xlarge, r6in.4xlarge, r6in.8xlarge, r6in.12xlarge, r6in.16xlarge, r6in.24xlarge, r6in.32xlarge, r6i.large, r6i.xlarge, r6i.2xlarge, r6i.4xlarge, r6i.8xlarge, r6i.12xlarge, r6i.16xlarge, r6i.24xlarge, r6i.32xlarge, r6i.metal x2idn.16xlarge, x2idn.24xlarge, x2idn.32xlarge, x2idn.metal x2iedn.xlarge, x2iedn.2xlarge, x2iedn.4xlarge, x2iedn.8xlarge, x2iedn.16xlarge, x2iedn.24xlarge, x2iedn.32xlarge, x2iedn.metal
+# General Purpose:** m7i.large, m7i.xlarge, m7i.2xlarge, m7i.4xlarge, m7i.8xlarge, m7i.12xlarge, m7i.16xlarge, m7i.24xlarge, m7i.48xlarge, m7i.metal-24xl, m7i.metal-48xl, m7i-flex.large, m7i-flex.xlarge, m7i-flex.2xlarge, m7i-flex.4xlarge, m7i-flex.8xlarge, m6i.large, m6i.xlarge, m6i.2xlarge, m6i.4xlarge, m6i.8xlarge, m6i.12xlarge, m6i.16xlarge, m6i.24xlarge, m6i.32xlarge, m6i.metal, m6in.large, m6in.xlarge, m6in.2xlarge, m6in.4xlarge, m6in.8xlarge, m6in.12xlarge, m6in.16xlarge, m6in.24xlarge, m6in.32xlarge
+# Compute Optimized:** c7i.large, c7i.xlarge, c7i.2xlarge, c7i.4xlarge, c7i.8xlarge, c7i.12xlarge, c7i.16xlarge, c7i.24xlarge, c7i.48xlarge, c7i.metal-24xl, c7i.metal-48xl, c6in.large, c6in.xlarge, c6in.2xlarge, c6in.4xlarge, c6in.8xlarge, c6in.12xlarge, c6in.16xlarge, c6in.24xlarge, c6in.32xlarge c6i.large, c6i.xlarge, c6i.2xlarge, c6i.4xlarge, c6i.8xlarge, c6i.12xlarge, c6i.16xlarge, c6i.24xlarge, c6i.32xlarge, c6i.metal
+# Memory Optimized:** r7i.large, r7i.xlarge, r7i.2xlarge, r7i.4xlarge, r7i.8xlarge, r7i.12xlarge, r7i.16xlarge, r7i.24xlarge, r7i.48xlarge, r7i.metal-24xl, r7i.metal-48xl, r7iz.large, r7iz.xlarge, r7iz.2xlarge, r7iz.4xlarge, r7iz.8xlarge, r7iz.12xlarge, r7iz.16xlarge, r7iz.32xlarge, r7iz.metal-16xl, r7iz.metal-32xl, r6in.large, r6in.xlarge, r6in.2xlarge, r6in.4xlarge, r6in.8xlarge, r6in.12xlarge, r6in.16xlarge, r6in.24xlarge, r6in.32xlarge, r6i.large, r6i.xlarge, r6i.2xlarge, r6i.4xlarge, r6i.8xlarge, r6i.12xlarge, r6i.16xlarge, r6i.24xlarge, r6i.32xlarge, r6i.metal x2idn.16xlarge, x2idn.24xlarge, x2idn.32xlarge, x2idn.metal x2iedn.xlarge, x2iedn.2xlarge, x2iedn.4xlarge, x2iedn.8xlarge, x2iedn.16xlarge, x2iedn.24xlarge, x2iedn.32xlarge, x2iedn.metal
 # Storage Optimized:** i4i.large, i4i.xlarge, i4i.2xlarge, i4i.4xlarge, i4i.8xlarge, i4i.16xlarge, i4i.32xlarge, i4i.metal
 # Accelerated Compute:** trn1.2xlarge, trn1.32xlarge
 
 locals {
-  name            = "ex-${replace(basename(path.cwd), "_", "-")}"
-  cluster_version = "1.24"
+  cluster_version = "1.28"
   region          = "us-east-1"
   vpc_id          = "vpc-example12" # Update with your own VPC id that is available in the region you are testing
-
   # Defining the instance types that will be allowed in the EKS managed node group. This includes the latest Intel CPU
   # that is in the EKS Managed Node group
-  instance_types = ["m6i.large", "c6i.large", "m6i.2xlarge", "r6i.large"]
+  instance_types = ["m7i.large", "c7i.large"]
 
   tags = {
-    Example    = local.name
     GithubRepo = "terraform-aws-eks"
     GithubOrg  = "terraform-aws-modules"
     Owner      = "john.doe@abc.com"
     Duration   = "5"
   }
+}
+
+################################################################################
+# Random resource for generating unique EKS cluster names
+################################################################################
+resource "random_id" "rid" {
+  byte_length = 5
 }
 
 ################################################################################
@@ -36,7 +40,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.10.0"
 
-  cluster_name                   = local.name
+  cluster_name                   = "my-eks-cluster-${random_id.rid.dec}"
   cluster_version                = local.cluster_version
   cluster_endpoint_public_access = true
   vpc_id                         = local.vpc_id
@@ -79,14 +83,14 @@ module "key_pair" {
   source  = "terraform-aws-modules/key-pair/aws"
   version = "~> 2.0"
 
-  key_name_prefix    = local.name
+  key_name_prefix    = "my-eks-cluster-${random_id.rid.dec}"
   create_private_key = true
 
   tags = local.tags
 }
 
 resource "aws_security_group" "remote_access" {
-  name_prefix = "${local.name}-remote-access"
+  name_prefix = "my-eks-cluster-${random_id.rid.dec}-remote-access"
   description = "Allow remote SSH access"
   vpc_id      = local.vpc_id
 
@@ -106,5 +110,5 @@ resource "aws_security_group" "remote_access" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = merge(local.tags, { Name = "${local.name}-remote" })
+  tags = merge(local.tags, { Name = "my-eks-cluster-${random_id.rid.dec}-remote" })
 }
