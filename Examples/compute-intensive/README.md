@@ -123,7 +123,7 @@ or follow the guide [here](https://github.com/kubernetes-sigs/node-feature-disco
 
 Each created worker node will have labels as per [eks.tf](./eks.tf#L59), and optionally additional ones added by NFD. Those labels can be used for pod scheduling with pod configurations including ```nodeSelector:``` fields like explained in Kubernetes Docs [here](https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/#create-a-pod-that-gets-scheduled-to-your-chosen-node).
 
-### Validation of CPU pinning
+### Validation of CPU pinning and NFD
 
 To validate that CPU pinning is activated on worker nodes do
 
@@ -145,6 +145,22 @@ which will for each worker node in the cluster report if CPU pinning is activate
 ```
 
 That test case deploys daemonset, from inside each pod checks that cpusets are limited, and deletes the daemonset.
+
+To validate if NFD labels were created on every worker node do
+
+```
+./validate.sh --only validateNFD
+```
+
+which will for each worker node in the cluster report if enough NFD labels were created, like
+
+```
+          {
+            "name": "ip-00-0-0-00.aws-region.compute.internal",
+            "pass": true,
+            "debug": "70 labels"
+          }
+```
 
 ### Destroying cluster
 
