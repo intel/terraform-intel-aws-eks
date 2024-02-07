@@ -2,18 +2,18 @@
   <img src="https://github.com/OTCShare2/terraform-intel-aws-eks/blob/main/images/logo-classicblue-800px.png?raw=true" alt="Intel Logo" width="250"/>
 </p>
 
-# Intel® Optimized Cloud Modules for Terraform
+# Intel® Cloud Optimization Modules for Terraform
 
-© Copyright 2024, Intel Corporation
+© Copyright 2022, Intel Corporation
 
 ## Amazon EKS Module
-Creates an Amazon Elastic Kubernetes Service (EKS) cluster optimized on 4th generation of Intel Xeon scalable processors (code named Sapphire Rapids). The example will be creating an EKS cluster with a self managed node group.
+Creates an Amazon Elastic Kubernetes Service (EKS) cluster optimized on 4th generation of Intel Xeon scalable processors (code named Sapphire Rapids). The example will be creating an EKS cluster with an EKS managed node group.
 
-This is an EKS cluster with a single self managed node group. We are using the default node group. The node group is a collection of Intel Sapphire Rapids based EC2 instance types. This node group is using an autoscaling configuration. Within this example, we have provided parameters to scale the minimum size, desired size and the maximum size of the node group within the EKS cluster.
+This is an EKS cluster with a single EKS managed node group. The node group is a collection of Intel Ice Lake based EC2 instance types. This node group is using an autoscaling configuration. Within this example, we have provided parameters to scale the minimum size, desired size and the maximum size of the EKS cluster.
 
 ## Usage
 
-See examples folder for code ./examples/Self_Managed_Node_Group/main.tf
+See examples folder for code ./examples/EKS_Managed_Node_Group/main.tf
 
 Example of main.tf
 
@@ -31,12 +31,13 @@ Example of main.tf
 # Storage Optimized:** i4i.large, i4i.xlarge, i4i.2xlarge, i4i.4xlarge, i4i.8xlarge, i4i.16xlarge, i4i.32xlarge, i4i.metal
 # Accelerated Compute:** trn1.2xlarge, trn1.32xlarge
 
-
 locals {
   cluster_version = "1.28"
   region          = "us-east-1"
   vpc_id          = "vpc-example12" # Update with your own VPC id that is available in the region you are testing
-  instance_type   = "m7i.large"
+  # Defining the instance types that will be allowed in the EKS managed node group. This includes the latest Intel CPU
+  # that is in the EKS Managed Node group
+  instance_types = ["m7i.large", "c7i.large"]
 
   tags = {
     GithubRepo = "terraform-aws-eks"
@@ -64,45 +65,37 @@ module "eks" {
   cluster_name                   = "my-eks-cluster-${random_id.rid.dec}"
   cluster_version                = local.cluster_version
   cluster_endpoint_public_access = true
-
-  cluster_addons = {
-    coredns = {
-      most_recent = true
-    }
-    kube-proxy = {
-      most_recent = true
-    }
-    vpc-cni = {
-      most_recent = true
-    }
-  }
-
-  vpc_id = local.vpc_id
+  vpc_id                         = local.vpc_id
 
   # Update with your own subnet ids in the vpc you are testing. Two unique subnet ids needed for subnet_ids
   # Two additional unique subnet ids needed for control_plane_subnet_ids
   subnet_ids               = ["subnet-example12", "subnet-example23"] # Change based on your vpcs and subnets
   control_plane_subnet_ids = ["subnet-example34", "subnet-example45"] # Change based on your vpcs and subnets
 
-  # Self managed node groups will not automatically create the aws-auth configmap so we need to
-  create_aws_auth_configmap = true
-  manage_aws_auth_configmap = true
-
-  self_managed_node_group_defaults = {
-    # enable discovery of autoscaling groups by cluster-autoscaler
-    autoscaling_group_tags = {
-      "k8s.io/cluster-autoscaler/enabled" : true,
-      "k8s.io/cluster-autoscaler/my-eks-cluster-${random_id.rid.dec}" : "owned",
-    }
+  eks_managed_node_group_defaults = {
+    ami_type                   = "AL2_x86_64"
+    instance_types             = local.instance_types
+    iam_role_attach_cni_policy = true
   }
 
-  self_managed_node_groups = {
-    # Default node group - overriding the instance type and the auto scaling configuration
-    default_node_group = {
-      instance_type = local.instance_type
-      min_size      = 2
-      max_size      = 4
-      desired_size  = 2
+  eks_managed_node_groups = {
+    # Default node group - as provided by AWS EKS
+    default-node-group = {
+      # By default, the module creates a launch template to ensure tags are propagated to instances, etc.,
+      # so we need to disable it to use the default template provided by the AWS EKS managed node group service
+      use_custom_launch_template = false
+
+      disk_size = 50
+
+      min_size     = 2
+      max_size     = 6
+      desired_size = 2
+
+      # Remote access cannot be specified with a launch template
+      remote_access = {
+        ec2_ssh_key               = module.key_pair.key_pair_name
+        source_security_group_ids = [aws_security_group.remote_access.id]
+      }
     }
   }
   tags = local.tags
@@ -144,17 +137,7 @@ resource "aws_security_group" "remote_access" {
 ```
 
 Run Terraform
-Update the VPC Id in main.tf on the example
-```hcl
-vpc_id          = "vpc-example12" # Update with your own VPC id that is available in the region you are testing
-```
-Update the subnet ids and control plane subnet ids in main.tf of the example
-```hcl
-subnet_ids               = ["subnet-example12", "subnet-example23"] # Change based on your vpcs and subnets
-control_plane_subnet_ids = ["subnet-example34", "subnet-example45"] # Change based on your vpcs and subnets
-```
 
-Run ther below terraform commands in command line
 ```hcl
 terraform init  
 terraform plan
@@ -167,7 +150,7 @@ Note that this example may create resources. Run `terraform destroy` when you do
 ## Considerations  
 - The AWS region is provided within the example. Update the region to your region of choice
 - The EKS cluster is created in the VPC provided within the example. Update the VPC value to create the cluster in your VPC of choice
-- The cluster has a public IP address. If you want your EKS cluster to not have a public IP, override the value accordingly
+- The cluster has a public IP address. If you want your VM to not have a public IP, override the value accordingly
 - The subnet_ids and control_plane_subnet_ids parameters are provided in the example. Each of these parameters need two subnets within your VPC. All the subnets used in these parameters should be unique
 
 <!-- BEGIN_TF_DOCS -->
