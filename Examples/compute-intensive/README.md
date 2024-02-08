@@ -32,9 +32,13 @@ Optional:
 * [git](https://github.com/git-guides/install-git#install-git-on-linux)
 * [jq](https://github.com/jqlang/jq/releases)
 
+### Note on public access to EKS entry point
+
+Please note that current configuration creates public access to EKS entry point from all public internet addresses. If this does not satisfy your requirements, in [main.tf](./main.tf#L42) modify the value for cluster_endpoint_public_access_cidrs.
+
 ### Note on egress rules
 
-Please note that current configuration creates worker nodes where the security group rule allows egress to all public internet addresses. If this does not satisfy your requirements, in [main.tf](./main.tf#L49) modify the value for egress_cidr_blocks, or find other ways to limit connectivity or other ways to create desired clusters.
+Please note that current configuration creates worker nodes where the security group rule allows egress to all public internet addresses. If this does not satisfy your requirements, in [main.tf](./main.tf#L45) modify the value for egress_cidr_blocks, or find other ways to limit the connectivity.
 
 ### Creating new or using existing VPC
 
@@ -48,7 +52,7 @@ It will create new vDC with required networking constructs, EKS control plane an
 
 This is more complex option where you need to ensure that your existing VPC is configured to run EKS, including security group and connectivity. For troubleshooting you can look [EKS troubleshooting](https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html).
 
-If you like to use an existing VPC, then in [main.tf](./main.tf#L24) configure ```use_existing_vpc = true```, and configure existing_vpc_id and existing_private_subnet_ids. This will in existing VPC with two private subnets, create EKS control plane and worker nodes.
+If you like to use an existing VPC, then in [main.tf](./main.tf#L20) configure ```use_existing_vpc = true```, and configure existing_vpc_id and existing_private_subnet_ids. This will in existing VPC with two private subnets, create EKS control plane and worker nodes.
 
 In a region defined in your AWS_DEFAULT_REGION environment variable, you can get list of vpc_id's with
 
@@ -64,7 +68,7 @@ aws ec2 describe-subnets | jq -r ' .Subnets[] | select( ( .VpcId == "vpc-0000000
 
 ### Creating EKS cluster
 
-The module configuration will create compute-intensive worker nodes with activated CPU pinning (by having Kubelet configured with static CPU policy), and install NFD. If you don't like CPU pinning, in [main.tf](./main.tf#L36) configure ```worker_node_create_default = true``` and ```worker_node_create_compute-intensive = false```.
+The module configuration will create compute-intensive worker nodes with activated CPU pinning (by having Kubelet configured with static CPU policy), and install NFD. If you don't like CPU pinning, in [main.tf](./main.tf#L32) configure ```worker_node_create_default = true``` and ```worker_node_create_compute-intensive = false```.
 
 Also check configurations in other .tf files.
 
@@ -121,7 +125,7 @@ or follow the guide [here](https://github.com/kubernetes-sigs/node-feature-disco
 
 ### Using node labels
 
-Each created worker node will have labels as per [eks.tf](./eks.tf#L59), and optionally additional ones added by NFD. Those labels can be used for pod scheduling with pod configurations including ```nodeSelector:``` fields like explained in Kubernetes Docs [here](https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/#create-a-pod-that-gets-scheduled-to-your-chosen-node).
+Each created worker node will have labels as per [main.tf](./main.tf#L132), and optionally additional ones added by NFD. Those labels can be used for pod scheduling with pod configurations including ```nodeSelector:``` fields like explained in Kubernetes Docs [here](https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/#create-a-pod-that-gets-scheduled-to-your-chosen-node).
 
 ### Validation of CPU pinning and NFD
 
