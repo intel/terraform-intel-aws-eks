@@ -1,12 +1,20 @@
 #
-# Copyright (C) 2023 Intel Corporation
+# Copyright (C) 2024 Intel Corporation
 # SPDX-License-Identifier: Apache-2.0
 #
+
+################################################################################
+# Region
+################################################################################
 
 output "aws_region" {
   description = "AWS region"
   value       = trim(data.aws_region.current.name, "\"")
 }
+
+################################################################################
+# VPC
+################################################################################
 
 output "vpc_id" {
   description = "VPC ID"
@@ -20,6 +28,10 @@ output "vpc_owner_id" {
   description = "VPC owning AWS account ID"
   value       = trim(local.use_existing_vpc ? data.aws_vpc.existing[0].owner_id : module.vpc.vpc_owner_id, "\"")
 }
+
+################################################################################
+# Cluster
+################################################################################
 
 output "cluster_name" {
   description = "EKS cluster name"
@@ -38,6 +50,10 @@ output "cluster_certificate_authority_data" {
   value       = trim(module.eks.cluster_certificate_authority_data, "\"")
   sensitive   = true
 }
+
+################################################################################
+# Configure kubectl
+################################################################################
 
 output "configure_kubectl" {
   description = "Update your kubeconfig"
