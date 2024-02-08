@@ -118,7 +118,7 @@ or follow the guide [here](https://docs.aws.amazon.com/prescriptive-guidance/lat
 Optionally install Node Feature Discovery with
 
 ```
-kubectl apply -k https://github.com/kubernetes-sigs/node-feature-discovery/deployment/overlays/default?ref=v0.14.3
+kubectl apply -k https://github.com/kubernetes-sigs/node-feature-discovery/deployment/overlays/default?ref=v0.15.1
 ```
 
 or follow the guide [here](https://github.com/kubernetes-sigs/node-feature-discovery#quick-start--the-short-short-version).

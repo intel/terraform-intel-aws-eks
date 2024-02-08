@@ -29,8 +29,8 @@ locals {
 
   ## EKS
   # if node group with worker nodes compute-intensive or/and default should be created
-  worker_node_create_default           = true # false
-  worker_node_create_compute-intensive = false # true
+  worker_node_create_default           = false
+  worker_node_create_compute-intensive = true
   cluster_name_prefix                  = "intel-optmod"
   cluster_version                      = "1.29"
   worker_node_instance                 = "m7i.4xlarge" #  c7i.4xlarge
