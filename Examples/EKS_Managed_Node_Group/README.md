@@ -11,6 +11,7 @@ Creates an Amazon Elastic Kubernetes Service (EKS) cluster optimized on 4th gene
 
 This is an EKS cluster with a single EKS managed node group. The node group is a collection of Intel Ice Lake based EC2 instance types. This node group is using an autoscaling configuration. Within this example, we have provided parameters to scale the minimum size, desired size and the maximum size of the EKS cluster.
 
+
 ## Usage
 
 See examples folder for code ./examples/EKS_Managed_Node_Group/main.tf
