@@ -8,6 +8,8 @@
 
 ## AWS EKS module for compute-intensive workloads
 
+Compute-intensive applications require high ratio of Compute (CPU cycles, accelerators like CPU instructions or integrated into CPU) compared to Networking and Storage. Examples include: complex mathematical computations for scientific, engineering and financial calculations, video rendering/transcoding, or ML/AI. When those applications are sensitive to platform impairments like pausing CPU cycles (for example because of the OS scheduler), they need to be carefully scheduled on worker nodes that expose some particular hardware feature or protects provided compute cores. This can be achieved by labeling nodes with features available per node, and activating CPU pinning which protects application running on particular cores from other workloads that cannot be scheduled on those cores, and from Linux scheduler moving them to other cores.
+
 Configuration in this directory creates one new [AWS EKS](https://aws.amazon.com/eks/) cluster with worker nodes. It can be done in an existing VPC, or a new VPC can be created.
 
 The worker nodes are created on an EC2 instances with [4th Generation Intel® Xeon® Scalable Processor](https://www.intel.com/content/www/us/en/products/docs/processors/xeon-accelerated/4th-gen-xeon-scalable-processors.html), and optimized for [compute-intensive](https://github.com/anuket-project/RA2/blob/main/doc/ref_arch/kubernetes/chapters/chapter03.rst#scheduling-pods-with-non-resilient-applications) workloads by activating [static CPU Manager policy](https://kubernetes.io/docs/tasks/administer-cluster/cpu-management-policies/) for better workload isolation and installing [Node Feature Discovery](https://github.com/kubernetes-sigs/node-feature-discovery) (NFD) for better mapping of workloads to worker node hardware configurations, or using default configuration without such features.
@@ -123,10 +125,6 @@ kubectl apply -k https://github.com/kubernetes-sigs/node-feature-discovery/deplo
 
 or follow the guide [here](https://github.com/kubernetes-sigs/node-feature-discovery#quick-start--the-short-short-version).
 
-### Using node labels
-
-Each created worker node will have labels as per [main.tf](./main.tf#L132), and optionally additional ones added by NFD. Those labels can be used for pod scheduling with pod configurations including ```nodeSelector:``` fields like explained in Kubernetes Docs [here](https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/#create-a-pod-that-gets-scheduled-to-your-chosen-node).
-
 ### Validation of CPU pinning and NFD
 
 To validate that CPU pinning is activated on worker nodes do
@@ -165,6 +163,30 @@ which will for each worker node in the cluster report if enough NFD labels were 
             "debug": "70 labels"
           }
 ```
+
+### Using CPU pinning
+
+On nodes where Kubelet is configured with static CPU policy, CPU pinning can be used for scheduled pods by having ```resources``` both ```requests``` and ```limits``` for ```cpu``` as the same integer value, like in example:
+```
+...
+    spec:
+      ...
+      nodeSelector:
+        iac-tool/node-profile: "compute-intensive"
+      containers:
+      - name: container1
+        ...
+        resources:
+          requests:
+            cpu: 2
+          limits:
+            cpu: 2
+...
+```
+
+### Using node labels
+
+Each created worker node will have labels as per [main.tf](./main.tf#L132), and optionally additional ones added by NFD. Those labels can be used for pod scheduling with pod configurations including ```nodeSelector:``` fields like explained in Kubernetes Docs [here](https://kubernetes.io/docs/tasks/configure-pod-container/assign-pods-nodes/#create-a-pod-that-gets-scheduled-to-your-chosen-node).
 
 ### Destroying cluster
 
