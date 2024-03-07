@@ -46,7 +46,7 @@ Please note that current configuration creates worker nodes where the security g
 
 This is simpler option which will provision all required resources.
 
-It will create new vDC with required networking constructs, EKS control plane and worker nodes.
+It will create new VPC with required networking constructs, EKS control plane and worker nodes.
 
 #### Option 2: Creating EKS cluster in existing VPC
 
