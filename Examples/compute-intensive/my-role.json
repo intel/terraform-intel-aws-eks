@@ -1,0 +1,52 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "ec2:*",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "ecr:*",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:AttachRolePolicy",
+                "iam:PutRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:DeleteRolePolicy",
+                "iam:CreatePolicy",
+                "iam:DeletePolicy",
+                "iam:CreateRole",
+                "iam:PassRole",
+                "iam:DeleteRole",
+                "iam:CreateRole",
+                "iam:CreateOpenIDConnectProvider",
+                "iam:TagOpenIDConnectProvider",
+                "iam:DeleteOpenIDConnectProvider",
+                "iam:GenerateCredentialReport",
+                "iam:GenerateServiceLastAccessedDetails",
+                "iam:Get*",
+                "iam:List*",
+                "iam:SimulateCustomPolicy",
+                "iam:SimulatePrincipalPolicy"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "logs:*"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": "kms:*",
+            "Resource": "*"
+        }
+    ]
+}
