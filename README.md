@@ -188,9 +188,7 @@ No modules.
 
 ## Resources
 
-Links
-
-https://docs.aws.amazon.com/eks/latest/userguide/choosing-instance-type.html
+No resources.
 
 ## Inputs
 
