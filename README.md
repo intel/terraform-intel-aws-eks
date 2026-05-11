@@ -1,3 +1,10 @@
+## THIS PROJECT IS ARCHIVED
+
+Intel will not provide or guarantee development of or support for this project, including but not limited to, maintenance, bug fixes, new releases or updates. 
+Patches to this project are no longer accepted by Intel.  
+If you have an ongoing need to use this project, are interested in independently developing it, or would like to maintain patches for the community, please create your own fork of the project.  
+
+contact: webadmin@linux.intel.com
 <p align="center">
   <img src="https://github.com/intel/terraform-intel-aws-postgresql/blob/main/images/logo-classicblue-800px.png?raw=true" alt="Intel Logo" width="250"/>
 </p>
